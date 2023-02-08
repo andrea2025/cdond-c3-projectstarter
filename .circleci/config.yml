@@ -119,7 +119,7 @@ jobs:
           command: |
            cd frontend
            npm install
-          # npm install oauth-sign@^0.9.0
+           # npm install oauth-sign@^0.9.0
            npm audit --audit-level=critical
       - save_cache:
           paths: [frontend/node_modules]
@@ -140,7 +140,7 @@ jobs:
           command: |
             cd backend
             npm install
-          # npm install oauth-sign@^0.9.0
+            # npm install oauth-sign@^0.9.0
             npm audit --audit-level=critical
       - save_cache:
           paths: [backend/node_modules]

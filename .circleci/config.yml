@@ -8,7 +8,7 @@ commands:
           name: Install Ansible
           command: |
             sudo apt update
-            sudo apt install software-properties-common-y
+            sudo apt install software-properties-common -y
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible -y
 
@@ -43,7 +43,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure "https://kvdb.io/Gihzln9tKaS8UmwtTTnRhb/migration_<<parameters.workflow_id>>"
+            SUCCESS=$(curl --insecure "https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/migration_<<parameters.workflow_id>>"
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -258,7 +258,7 @@ jobs:
             # Your code here
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                curl --insecure https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             
             fi
       - destroy-environment

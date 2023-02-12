@@ -286,7 +286,6 @@ jobs:
 
   deploy-frontend:
     docker:
-      # Docker image here that supports AWS CLI
        - image: cimg/base:stable
     steps:
        - checkout
@@ -298,7 +297,7 @@ jobs:
        - install_nodejs
        - install_awscli
        - install_ansible
-      - run:
+       - run:
           name: Get backend url
           command: |
             # your code here

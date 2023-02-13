@@ -62,7 +62,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure "https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/migration_<<parameters.workflow_id>>")
+            SUCCESS=$(curl --insecure "https://kvdb.io/M6EGUsv5TFpxPGyEvwUZoB/migration_<<parameters.workflow_id>>")
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -277,7 +277,7 @@ jobs:
             # Your code here
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl --insecure https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                curl --insecure https://kvdb.io/M6EGUsv5TFpxPGyEvwUZoB/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             
             fi
       - destroy-environment
@@ -457,12 +457,12 @@ jobs:
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
             echo Stack names: "${STACKS[@]}"  
             export OldWorkflowID=$(curl --insecure https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/old_workflow_id)
-            echo Old Workflow ID: $OldWorkflowID       
+            echo OldWorkflowID: $OldWorkflowID       
       - run:
           name: Remove old stacks and files
           command: |
-            export OldWorkflowID=$(curl --insecure https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/old_workflow_id)
-            echo Old Workflow ID: $OldWorkflowID
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/M6EGUsv5TFpxPGyEvwUZoB/old_workflow_id)
+            echo OldWorkflowID: $OldWorkflowID
 
             if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
             then

@@ -445,7 +445,6 @@ jobs:
              echo $OldWorkflowID >> ~/OldWorkflowID.txt
              cat ~/OldWorkflowID.txt  
 
-
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name "InitialStack-${OldWorkflowID}" \

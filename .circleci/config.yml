@@ -441,7 +441,7 @@ jobs:
             # your code here
             export OldworkflowID = $(aws cloudformation list-stacks \
             list-exports --query "Export[?Name==\'WorkflowID\'].Value" \
-            --no-paginate --output text))
+            --no-paginate --output text)
              echo $OldWorkflowID >> ~/OldWorkflowID.txt
              cat ~/OldWorkflowID.txt  
 

@@ -360,7 +360,7 @@ jobs:
           command: |
             # your code here
             cd backend
-            
+
             npm i
             npm run build
             cd ..
@@ -393,16 +393,15 @@ jobs:
           name: Backend smoke test.
           command: |
             # your code here
-            export BACKEND_IP=$(aws ec2 describe-instances \
-            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
             --filter Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} \
-            --output text
-            )
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
+            export API_URL="http://${BACKEND_PUBLIC_IP}:3030"
+            echo "${BACKEND_PUBLIC_IP}"
             echo backend-${CIRCLE_WORKFLOW_ID:0:7}
             echo ${API_URL}
-            if curl "${API_URL}/api/status" | grep "ok"
+            if curl -s $API_URL/api/status | grep "ok"
             then
                 exit 0
             else
@@ -413,7 +412,7 @@ jobs:
           command: |
             # your code here
             URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com"            
-            echo ${URL} 
+            echo $URL 
             if curl -s ${URL} | grep "Welcome"
             then
                 # Change this to 0 after the job fails
@@ -440,8 +439,8 @@ jobs:
             export OLD_WORKFLOW_ID=$(aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no paginate --output text)
-            echo Old Workflow ID: "${OLD_WORKFLOW_ID}"
-            echo Current Workflow ID: ${CIRCLE_WORKFLOW_ID:0:7}
+            echo OldWorkflowID: "${OLD_WORKFLOW_ID}"
+            echo CurrentWorkflowID: ${CIRCLE_WORKFLOW_ID:0:7}
             curl https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
@@ -449,7 +448,7 @@ jobs:
           
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name "InitialStack" \
+            --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
            

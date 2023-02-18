@@ -460,7 +460,7 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-     - install_awscli
+      - install_awscli
       - run:
           name: Get old stack workflow id
           command: |

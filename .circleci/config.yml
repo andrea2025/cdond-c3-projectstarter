@@ -422,8 +422,7 @@ jobs:
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
             curl https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id -d "${OLD_WORKFLOW_ID}"
-            echo OldWorkflowID: "${OLD_WORKFLOW_ID}"
-            echo CurrentWorkflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+           
            
       - run:
           name: Update cloudfront distribution
@@ -432,7 +431,8 @@ jobs:
             --template-file .circleci/files/cloudfront.yml \
             --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
             --stack-name InitialStack
-           
+            echo OldWorkflowID: "${OLD_WORKFLOW_ID}"
+            echo CurrentWorkflowID: ${CIRCLE_WORKFLOW_ID:0:7}
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:

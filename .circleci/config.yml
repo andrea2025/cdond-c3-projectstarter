@@ -260,7 +260,8 @@ jobs:
             cat inventory.txt
             
             ansible-playbook -i inventory.txt configure-server.yml
-       - destroy-environment
+       - destroy-environment:
+             workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       # Here's where you will add some code to rollback on failure      
 
   run-migrations:
@@ -287,8 +288,10 @@ jobs:
                 curl --insecure https://kvdb.io/M6EGUsv5TFpxPGyEvwUZoB/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             
             fi
-      - destroy-environment
-      - revert-migrations
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
      # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
@@ -332,8 +335,10 @@ jobs:
             # npm run build
             # tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             # aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-       - destroy-environment
-       - revert-migrations
+       - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+       - revert-migrations:
+            workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
@@ -416,8 +421,10 @@ jobs:
             else
               exit 1
             fi
-      - destroy-environment
-      - revert-migrations
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       # Here's where you will add some code to rollback on failure  
 
   cloudfront-update:
@@ -433,29 +440,23 @@ jobs:
             export OLD_WORKFLOW_ID=$(aws cloudformation \
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no paginate --output text)
-            echo "Old Workflow ID: $OLD_WORKFLOW_ID"
+            echo Old Workflow ID: "${OLD_WORKFLOW_ID}"
+            echo Current Workflow ID: ${CIRCLE_WORKFLOW_ID:0:7}
             curl https://kvdb.io/3odXCBj4sdMh9nhNmsSAev/old_workflow_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
           command: |
-            # your code here
-            export OldworkflowID = ($(aws cloudformation list-stacks \
-            --query 'Export[?Name==`WorkflowID`].Value' \
-            --no-paginate --output text))
-             echo $OldWorkflowID >> ~/OldWorkflowID.txt
-             cat ~/OldWorkflowID.txt  
-
+          
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name "InitialStack-${OldWorkflowID}" \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
             --tags project=udapeople
-
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo current workflow id : ${CIRCLE_WORKFLOW_ID:0:7}
            
-      - destroy-environment
-      - revert-migrations
+      - destroy-environment:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       # Here's where you will add some code to rollback on failure  
 
   cleanup:  

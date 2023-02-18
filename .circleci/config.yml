@@ -63,7 +63,7 @@ commands:
           # Add when this will run
           command: |
             # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS=$(curl --insecure "https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/migration_<<parameters.workflow_id>>")
+            export SUCCESS=$(curl --insecure "https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/migration_<<parameters.workflow_id>>")
             if(( $SUCCESS == 1 )); 
             then
               cd ~/project/backend
@@ -443,12 +443,10 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-          
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name InitialStack \
             --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
-            --tags project=udapeople
+            --stack-name InitialStack
            
       - destroy-environment:
            workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
@@ -463,7 +461,7 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      - install_awscli
+    #  - install_awscli
       - run:
           name: Get old stack workflow id
           command: |

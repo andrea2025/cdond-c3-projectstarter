@@ -471,9 +471,10 @@ jobs:
           name: Remove old stacks and files
           command: |
             export OldWorkflowID=$(curl --insecure https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id)
-            echo OldWorkflowID: $OldWorkflowID
+            echo OldWorkflowID: "udapeople-${OldWorkflowID}"
+            echo "udapeople-${OldWorkflowID}"
 
-            if [[ $OldWorkflowID != udapeople-${CIRCLE_WORKFLOW_ID:0:7} ]]
+            if [[ udapeople-${OldWorkflowID} != udapeople-${CIRCLE_WORKFLOW_ID:0:7} ]]
             then
               echo "------Delete Confirmed--------"
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive

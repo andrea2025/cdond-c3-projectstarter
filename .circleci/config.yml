@@ -458,21 +458,21 @@ jobs:
       - checkout
       - install_awscli
       - run:
-          name: Get old stack workflow id
+          name: Remove old stacks and files
           command: |
             # your code here
             export STACKS=($(aws cloudformation list-stacks \
                 --query "StackSummaries[*].StackName" \
                 --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
+           
+          
+            export OldWorkflowID=$(curl --insecure https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id)
+            
             echo Stack names: "${STACKS[@]}"  
-            export OldWorkflowID=$(curl --insecure https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id)
-            echo OldWorkflowID: "udapeople-${OldWorkflowID}"      
-      - run:
-          name: Remove old stacks and files
-          command: |
-            export OldWorkflowID=$(curl --insecure https://kvdb.io/FMk914MJU4CSd2SQJRRKgd/old_workflow_id)
             echo OldWorkflowID: "udapeople-${OldWorkflowID}"
             echo "udapeople-${OldWorkflowID}"
+            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+
 
             if [[ udapeople-${OldWorkflowID} != udapeople-${CIRCLE_WORKFLOW_ID:0:7} ]]
             then
